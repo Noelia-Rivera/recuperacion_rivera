@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,12 +22,13 @@ import pe.com.coches.entity.Tipocoche;
 import pe.com.coches.service.TipococheService;
 
 @RestController
-@RequestMapping("/api/tipos")
+@RequestMapping("/tipos")
 @CrossOrigin(origins = "http://localhost:4200")
 public class TipococheController {
 	@Autowired
 	private TipococheService service;
 	
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping
 	public ResponseEntity<List<Tipocoche>> readAll() {
 		try {
@@ -42,6 +44,7 @@ public class TipococheController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<Tipocoche> crearTipocoche(@Valid @RequestBody Tipocoche ti) {
 		try {
@@ -53,6 +56,7 @@ public class TipococheController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping("/{id}")
 	public ResponseEntity<Tipocoche> getTipococheId(@PathVariable("id") Long id) {
 		try {
@@ -64,6 +68,7 @@ public class TipococheController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Tipocoche> delTipocoche(@PathVariable("id") Long id) {
 		try {
@@ -75,6 +80,7 @@ public class TipococheController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
 	public ResponseEntity<Tipocoche> updateTipocoche(@PathVariable("id") Long id, @Valid @RequestBody Tipocoche ti) {
 		Optional<Tipocoche> t = service.read(id);

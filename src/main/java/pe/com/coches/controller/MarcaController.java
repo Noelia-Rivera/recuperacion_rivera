@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,12 +22,13 @@ import pe.com.coches.entity.Marca;
 import pe.com.coches.service.MarcaService;
 
 @RestController
-@RequestMapping("/api/marcas")
+@RequestMapping("/marcas")
 @CrossOrigin(origins = "http://localhost:4200")
 public class MarcaController {
 	@Autowired
 	private MarcaService service;
 	
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping
 	public ResponseEntity<List<Marca>> readAll() {
 		try {
@@ -42,6 +44,7 @@ public class MarcaController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<Marca> crearMarca(@Valid @RequestBody Marca ma) {
 		try {
@@ -53,6 +56,7 @@ public class MarcaController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping("/{id}")
 	public ResponseEntity<Marca> getMarcaId(@PathVariable("id") Long id) {
 		try {
@@ -64,6 +68,7 @@ public class MarcaController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Marca> delMarca(@PathVariable("id") Long id) {
 		try {
@@ -75,6 +80,7 @@ public class MarcaController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
 	public ResponseEntity<Marca> updateMarca(@PathVariable("id") Long id, @Valid @RequestBody Marca ma) {
 		Optional<Marca> m = service.read(id);
